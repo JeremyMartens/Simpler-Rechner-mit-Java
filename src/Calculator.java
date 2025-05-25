@@ -14,15 +14,15 @@ public class Calculator implements ActionListener {
     JButton[] funcButtons = new JButton[8]; //array to store all function Buttons
     JButton addButton, subButton, mulButton, divButton, decButton, equButton, delButton, clrButton; //Function Buttons
     JPanel panel;
-    Font myFont = new Font("Arial", 1, 20);
+    Font myFont = new Font("Arial", Font.BOLD, 20);
     double num1 = 0.0;
     double num2 = 0.0;
     double result = 0.0;
     char operator = 0;
     Calculator() {
-        this.frame.setDefaultCloseOperation(3);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(516, 600);
-        this.frame.setLayout((LayoutManager)null);
+        this.frame.setLayout(null);
         textField = new JTextField();
         textField.setBounds(100, 25, 300, 50);
         textField.setFont(myFont);
@@ -96,7 +96,7 @@ public class Calculator implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         //zahlen
-        if (Arrays.asList(numButtons).contains(e.getSource())) {
+        if (Arrays.stream(numButtons).anyMatch(button -> button == e.getSource())) {
             for (int i = 0; i < 10; i++) {
                 if (e.getSource() == numButtons[i]) {
                     String text = textField.getText();
@@ -106,7 +106,8 @@ public class Calculator implements ActionListener {
             }
         }
         //operatoren
-        else if (Arrays.asList(funcButtons).subList(0,4).contains(e.getSource())){
+        else if (Arrays.stream(funcButtons).limit(4).anyMatch(button -> button == e.getSource()))
+        {
             num1 = Double.parseDouble(textField.getText());
             textField.setText("");
             if (e.getSource() == funcButtons[0]) operator = '+';
@@ -117,7 +118,7 @@ public class Calculator implements ActionListener {
         //zurückbutton
         if (e.getSource() == funcButtons[6]) {
                 String text = textField.getText();
-                if (text.length() > 0) {
+                if (!text.isEmpty()) {
                     text = text.substring(0, text.length() - 1);
                     textField.setText(text);
                 }
